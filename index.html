@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="LIMONEEZ — fresh design, everyday movement. Discover our sneaker prototypes." />
+  <title>LIMONEEZ® — Move Different</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23f07832'/%3E%3Ctext x='32' y='46' font-size='40' font-weight='900' text-anchor='middle' fill='white' font-family='Arial'%3EL%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --orange: #f07832;
+      --orange-dark: #d95f1d;
+      --blue: #527fae;
+      --blue-pale: #eaf3fb;
+      --ink: #17191c;
+      --muted: #707781;
+      --line: rgba(20, 30, 40, .10);
+      --glass: rgba(255,255,255,.72);
+      --shadow: 0 18px 55px rgba(27, 46, 67, .10);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink); background: #fff; line-height: 1.5; overflow-x: hidden;
+    }
+    body.menu-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .wrap { width: min(1160px, calc(100% - 48px)); margin: auto; }
+    .announcement {
+      background: var(--ink); color: #fff; text-align: center; padding: 9px 16px;
+      font-size: 10px; letter-spacing: .19em; text-transform: uppercase;
+    }
+    .nav-shell {
+      position: fixed; z-index: 50; top: 38px; left: 0; width: 100%; padding: 13px 0;
+      transition: top .3s ease, padding .3s ease;
+    }
+    .nav-shell.scrolled { top: 8px; }
+    .nav {
+      width: min(1160px, calc(100% - 36px)); margin: auto; height: 68px;
+      display: flex; align-items: center; justify-content: space-between; padding: 0 22px;
+      border: 1px solid rgba(255,255,255,.8); border-radius: 20px;
+      background: rgba(255,255,255,.70); backdrop-filter: blur(22px) saturate(160%);
+      -webkit-backdrop-filter: blur(22px) saturate(160%);
+      box-shadow: 0 8px 35px rgba(31,49,68,.08);
+    }
+    .logo { font-size: 23px; font-weight: 950; letter-spacing: -.075em; }
+    .logo span { color: var(--orange); }
+    .nav-links { display: flex; gap: 34px; align-items: center; }
+    .nav-links a { color: #41464d; font-size: 12px; font-weight: 650; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--orange-dark); }
+    .nav-cta, .btn {
+      border: 0; border-radius: 999px; padding: 13px 21px; font-size: 12px; font-weight: 750;
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+    }
+    .nav-cta, .btn-primary { background: var(--orange); color: #fff; box-shadow: 0 9px 22px rgba(240,120,50,.20); }
+    .nav-cta:hover, .btn-primary:hover { transform: translateY(-3px); background: var(--orange-dark); box-shadow: 0 14px 28px rgba(240,120,50,.28); }
+    .btn-secondary { background: rgba(255,255,255,.72); border: 1px solid rgba(30,45,60,.13); color: var(--ink); }
+    .btn-secondary:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .menu-toggle { display: none; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.7); }
+    .menu-toggle span { display: block; width: 17px; height: 2px; background: var(--ink); margin: 4px auto; transition: .25s; }
+    .menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(3px) rotate(45deg); }
+    .menu-toggle[aria-expanded="true"] span:last-child { transform: translateY(-3px) rotate(-45deg); }
+    .mobile-menu {
+      display: none; position: fixed; z-index: 49; top: 115px; right: 22px; width: min(360px, calc(100% - 44px));
+      padding: 25px; border: 1px solid rgba(255,255,255,.9); border-radius: 25px;
+      background: rgba(255,255,255,.76); backdrop-filter: blur(28px) saturate(170%);
+      -webkit-backdrop-filter: blur(28px) saturate(170%); box-shadow: 0 24px 70px rgba(26,47,69,.17);
+    }
+    .mobile-menu.open { display: block; animation: menuIn .25s ease both; }
+    .mobile-menu a { display: flex; align-items: center; justify-content: space-between; padding: 16px 2px; border-bottom: 1px solid var(--line); font-weight: 750; }
+    .mobile-menu a span { color: var(--orange); font-size: 12px; }
+    .mobile-menu .btn { width: 100%; margin-top: 19px; }
+    @keyframes menuIn { from { opacity: 0; transform: translateY(-8px) scale(.98); } to { opacity: 1; transform: none; } }
+
+    .hero {
+      min-height: 760px; padding: 190px 0 95px; position: relative; overflow: hidden;
+      background: radial-gradient(circle at 78% 37%, rgba(207,229,248,.65), transparent 30%),
+                  radial-gradient(circle at 14% 70%, rgba(255,224,202,.38), transparent 28%), #fff;
+    }
+    .hero:before { content:""; position:absolute; width:550px; height:550px; border:1px solid rgba(82,127,174,.12); border-radius:50%; right:-170px; top:90px; }
+    .hero-grid { display:grid; grid-template-columns: .92fr 1.08fr; align-items:center; gap:35px; position:relative; z-index:1; }
+    .eyebrow { display:inline-flex; align-items:center; gap:10px; color:var(--orange-dark); font-size:10px; font-weight:850; letter-spacing:.2em; text-transform:uppercase; }
+    .eyebrow:before { content:""; width:25px; height:1px; background:var(--orange); }
+    h1 { font-size: clamp(58px, 7.5vw, 104px); line-height:.91; letter-spacing:-.085em; margin:24px 0; font-weight:900; }
+    h1 em { color:var(--orange); font-style:normal; }
+    .hero-copy { max-width:420px; color:var(--muted); font-size:15px; line-height:1.8; }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:31px; }
+    .hero-note { margin-top:45px; display:flex; align-items:center; gap:12px; color:#7d858e; font-size:10px; letter-spacing:.13em; text-transform:uppercase; }
+    .hero-note b { color:var(--ink); }
+    .hero-art { min-height:440px; display:grid; place-items:center; position:relative; }
+    .orbit { position:absolute; width:min(490px, 90%); aspect-ratio:1; border:1px solid rgba(82,127,174,.18); border-radius:50%; }
+    .orbit:before, .orbit:after { content:""; position:absolute; border:1px solid rgba(82,127,174,.12); border-radius:50%; inset:35px; }
+    .orbit:after { inset:75px; }
+    .shoe-visual { width:min(100%, 570px); position:relative; z-index:2; filter:drop-shadow(0 34px 22px rgba(42,57,74,.18)); transform:rotate(-12deg); animation:floatShoe 5s ease-in-out infinite; }
+    @keyframes floatShoe { 0%,100% { transform:translateY(0) rotate(-12deg); } 50% { transform:translateY(-13px) rotate(-9deg); } }
+    .floating-tag { position:absolute; z-index:3; padding:13px 17px; border:1px solid rgba(255,255,255,.95); border-radius:16px; background:rgba(255,255,255,.68); backdrop-filter:blur(18px); box-shadow:var(--shadow); font-size:10px; letter-spacing:.12em; text-transform:uppercase; }
+    .floating-tag strong { display:block; font-size:14px; letter-spacing:0; margin-top:3px; }
+    .tag-one { top:15%; right:0; } .tag-two { bottom:14%; left:0; }
+    .scroll-cue { position:absolute; bottom:25px; left:50%; transform:translateX(-50%); font-size:9px; color:#9aa1a9; letter-spacing:.2em; text-transform:uppercase; }
+
+    .ticker { overflow:hidden; background:var(--orange); color:#fff; padding:14px 0; white-space:nowrap; }
+    .ticker-track { display:inline-flex; gap:38px; animation:marquee 26s linear infinite; font-size:11px; font-weight:850; letter-spacing:.18em; }
+    @keyframes marquee { to { transform:translateX(-50%); } }
+    section { padding:110px 0; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:25px; margin-bottom:42px; }
+    .section-head h2, .story h2 { font-size:clamp(38px,5vw,64px); line-height:.98; letter-spacing:-.07em; margin-top:15px; }
+    .section-head p { max-width:340px; color:var(--muted); font-size:13px; line-height:1.8; }
+    .collection { background:#fbfcfd; }
+    .product-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .product-card { background:#fff; border:1px solid rgba(25,40,55,.07); border-radius:24px; overflow:hidden; transition:transform .35s, box-shadow .35s; }
+    .product-card:hover { transform:translateY(-8px); box-shadow:0 24px 55px rgba(31,49,68,.10); }
+    .product-image { min-height:270px; display:grid; place-items:center; position:relative; overflow:hidden; }
+    .product-image.blue { background:linear-gradient(140deg,#edf5fc,#dceaf7); }
+    .product-image.orange { background:linear-gradient(140deg,#fff2e9,#fce0ce); }
+    .product-image.grey { background:linear-gradient(140deg,#f3f5f7,#e7ebef); }
+    .product-image svg { width:90%; max-width:340px; filter:drop-shadow(0 18px 13px rgba(37,49,63,.16)); transition:transform .4s; }
+    .product-card:hover .product-image svg { transform:scale(1.06) rotate(-4deg); }
+    .prototype-label { position:absolute; top:17px; left:17px; background:rgba(255,255,255,.75); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.8); border-radius:99px; padding:7px 11px; font-size:9px; font-weight:850; letter-spacing:.13em; }
+    .product-info { padding:22px; }
+    .product-top { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .product-info h3 { font-size:20px; letter-spacing:-.04em; }
+    .product-code { color:var(--orange-dark); font-size:10px; font-weight:850; letter-spacing:.12em; }
+    .product-info p { color:var(--muted); font-size:12px; margin:9px 0 18px; }
+    .text-link { border:0; background:none; color:var(--ink); font-size:11px; font-weight:850; border-bottom:1px solid var(--orange); padding-bottom:4px; }
+    .story { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+    .story-visual { min-height:430px; border-radius:28px; position:relative; overflow:hidden; background:linear-gradient(140deg,#eaf3fb,#f7faff 55%,#fff0e6); display:grid; place-items:center; }
+    .story-visual .big-mark { font-size:clamp(90px,14vw,180px); font-weight:950; letter-spacing:-.12em; color:rgba(82,127,174,.17); transform:rotate(-12deg); }
+    .story-stamp { position:absolute; bottom:25px; right:25px; width:110px; height:110px; border-radius:50%; background:var(--orange); color:white; display:grid; place-items:center; text-align:center; font-size:10px; line-height:1.4; font-weight:850; letter-spacing:.1em; transform:rotate(12deg); }
+    .story-copy p { color:var(--muted); font-size:14px; line-height:1.9; margin-top:22px; max-width:480px; }
+    .values { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:35px; }
+    .value { padding:17px; border:1px solid var(--line); border-radius:17px; background:rgba(255,255,255,.72); }
+    .value b { display:block; font-size:12px; margin-bottom:5px; } .value span { color:var(--muted); font-size:10px; }
+    .manifesto { padding:0 0 110px; }
+    .manifesto-box { border-radius:30px; padding:65px; overflow:hidden; position:relative; color:#fff; background:linear-gradient(115deg,#f07832,#e66c2a 48%,#527fae); }
+    .manifesto-box:after { content:"L"; position:absolute; right:3%; bottom:-45%; font-size:390px; line-height:1; font-weight:950; color:rgba(255,255,255,.10); }
+    .manifesto-box h2 { position:relative; z-index:1; max-width:620px; font-size:clamp(38px,6vw,72px); line-height:.98; letter-spacing:-.07em; }
+    .manifesto-box p { position:relative; z-index:1; max-width:390px; margin:20px 0 28px; color:rgba(255,255,255,.83); font-size:13px; }
+    .manifesto-box .btn { position:relative; z-index:1; background:#fff; color:var(--ink); }
+    .contact { background:#f8fafc; }
+    .contact-grid { display:grid; grid-template-columns:.8fr 1.2fr; gap:80px; }
+    .contact h2 { font-size:clamp(40px,5vw,64px); line-height:.98; letter-spacing:-.07em; margin-top:16px; }
+    .contact-copy p { color:var(--muted); font-size:13px; margin-top:20px; max-width:330px; line-height:1.8; }
+    .contact-form { display:grid; grid-template-columns:1fr 1fr; gap:15px; padding:28px; border-radius:24px; background:rgba(255,255,255,.75); border:1px solid rgba(255,255,255,.95); box-shadow:var(--shadow); backdrop-filter:blur(16px); }
+    .field { display:flex; flex-direction:column; gap:7px; } .field.full { grid-column:1/-1; }
+    .field label { font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+    .field input, .field textarea { width:100%; border:1px solid var(--line); background:rgba(248,250,252,.8); padding:14px; border-radius:12px; outline:none; font-size:13px; transition:border .2s, box-shadow .2s; }
+    .field input:focus, .field textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(82,127,174,.10); }
+    .field textarea { min-height:120px; resize:vertical; }
+    .form-note { grid-column:1/-1; color:var(--muted); font-size:10px; }
+    .form-success { display:none; grid-column:1/-1; padding:12px; border-radius:12px; color:#245b3b; background:#eaf7ef; font-size:12px; }
+    footer { padding:38px 0; background:#17191c; color:#fff; }
+    .footer-row { display:flex; align-items:center; justify-content:space-between; gap:25px; }
+    .footer-brand p { color:#9da4ad; font-size:10px; margin-top:7px; }
+    .footer-links { display:flex; gap:23px; flex-wrap:wrap; } .footer-links a { color:#c7cbd0; font-size:11px; }
+    .copyright { color:#747c85; font-size:9px; letter-spacing:.1em; margin-top:28px; padding-top:18px; border-top:1px solid rgba(255,255,255,.12); }
+
+    .modal-backdrop { display:none; position:fixed; inset:0; z-index:100; background:rgba(14,22,31,.38); backdrop-filter:blur(8px); padding:20px; align-items:center; justify-content:center; }
+    .modal-backdrop.show { display:flex; }
+    .modal { width:min(520px,100%); padding:30px; border:1px solid rgba(255,255,255,.85); border-radius:26px; background:rgba(255,255,255,.88); backdrop-filter:blur(24px); box-shadow:0 30px 100px rgba(0,0,0,.2); position:relative; animation:menuIn .25s ease both; }
+    .modal-close { position:absolute; top:17px; right:17px; border:1px solid var(--line); border-radius:50%; width:36px; height:36px; background:#fff; font-size:18px; }
+    .modal h3 { font-size:32px; letter-spacing:-.06em; margin:14px 0 8px; }
+    .modal p { color:var(--muted); font-size:13px; line-height:1.8; margin-bottom:20px; }
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity:1; transform:none; }
+    @media (prefers-reduced-motion: reduce) { *, *:before, *:after { scroll-behavior:auto !important; animation-duration:.01ms !important; transition-duration:.01ms !important; } .reveal { opacity:1; transform:none; } }
+    @media (max-width: 850px) {
+      .nav-links, .nav-cta { display:none; } .menu-toggle { display:block; }
+      .hero { padding-top:155px; min-height:auto; } .hero-grid { grid-template-columns:1fr; }
+      .hero-art { min-height:360px; } .hero-copy { max-width:560px; }
+      .story { gap:35px; } .contact-grid { gap:35px; }
+    }
+    @media (max-width: 650px) {
+      .wrap { width:min(100% - 34px, 1160px); }
+      .announcement { font-size:8px; }
+      .nav-shell { top:33px; } .nav-shell.scrolled { top:5px; }
+      .nav { width:calc(100% - 24px); height:60px; padding:0 15px; }
+      .logo { font-size:21px; }
+      .mobile-menu { top:103px; right:12px; width:calc(100% - 24px); }
+      .hero { padding:145px 0 80px; } h1 { font-size:clamp(58px,17vw,82px); }
+      .hero-art { min-height:300px; } .tag-one { right:-3px; } .tag-two { left:-3px; }
+      section { padding:78px 0; }
+      .section-head { display:block; } .section-head p { margin-top:18px; }
+      .product-grid { grid-template-columns:1fr; }
+      .product-image { min-height:260px; }
+      .story, .contact-grid { grid-template-columns:1fr; }
+      .story-visual { min-height:300px; order:2; }
+      .values { grid-template-columns:1fr; }
+      .manifesto { padding-bottom:78px; }
+      .manifesto-box { padding:38px 26px; }
+      .manifesto-box:after { font-size:260px; right:-5%; }
+      .contact-form { grid-template-columns:1fr; padding:20px; }
+      .field.full, .form-note, .form-success { grid-column:1; }
+      .footer-row { align-items:flex-start; flex-direction:column; }
+    }
+  
+    /* LIMONEEZ storefront controls */
+    .nav-tools { display:flex; align-items:center; gap:9px; margin-left:auto; }
+    .nav-icon-btn { position:relative; display:inline-flex; align-items:center; gap:7px; border:1px solid var(--line); background:rgba(255,255,255,.78); color:var(--ink); border-radius:999px; padding:10px 13px; font-size:11px; font-weight:800; cursor:pointer; transition:.2s; }
+    .nav-icon-btn:hover { border-color:var(--orange); transform:translateY(-2px); }
+    .nav-count { display:inline-grid; place-items:center; min-width:19px; height:19px; padding:0 5px; border-radius:99px; background:var(--orange); color:white; font-size:10px; }
+    .product-actions { display:flex; align-items:center; gap:9px; margin-top:15px; }
+    .add-cart-btn { flex:1; border:0; border-radius:999px; padding:12px 15px; background:var(--ink); color:#fff; font-size:11px; font-weight:850; cursor:pointer; transition:.2s; }
+    .add-cart-btn:hover { background:var(--orange-dark); transform:translateY(-2px); }
+    .wish-btn { width:42px; height:42px; border:1px solid var(--line); border-radius:50%; background:#fff; color:var(--ink); font-size:19px; cursor:pointer; transition:.2s; }
+    .wish-btn.active { color:var(--orange-dark); border-color:var(--orange); background:#fff4ed; }
+    .sample-price { margin-top:13px; color:var(--muted); font-size:11px; font-weight:750; }
+    .store-overlay { position:fixed; inset:0; z-index:1000; background:rgba(16,22,29,.42); backdrop-filter:blur(5px); opacity:0; visibility:hidden; transition:.25s; }
+    .store-overlay.show { opacity:1; visibility:visible; }
+    .store-drawer { position:fixed; z-index:1001; top:0; right:0; height:100%; width:min(440px,100%); background:#fff; box-shadow:-20px 0 60px rgba(15,25,35,.16); transform:translateX(105%); transition:transform .3s ease; display:flex; flex-direction:column; }
+    .store-drawer.show { transform:translateX(0); }
+    .drawer-head { display:flex; justify-content:space-between; align-items:center; padding:24px; border-bottom:1px solid var(--line); }
+    .drawer-head h3 { font-size:22px; letter-spacing:-.05em; }
+    .drawer-close { border:0; background:#f3f5f7; width:36px; height:36px; border-radius:50%; font-size:22px; cursor:pointer; }
+    .drawer-body { padding:20px 24px; overflow:auto; flex:1; }
+    .drawer-empty { padding:50px 10px; text-align:center; color:var(--muted); font-size:13px; line-height:1.7; }
+    .cart-row, .wish-row { display:grid; grid-template-columns:1fr auto; gap:12px; padding:16px 0; border-bottom:1px solid var(--line); }
+    .cart-row h4, .wish-row h4 { font-size:14px; margin-bottom:5px; }
+    .cart-row p, .wish-row p { font-size:11px; color:var(--muted); }
+    .cart-row-actions { display:flex; align-items:center; gap:8px; margin-top:10px; }
+    .qty-btn, .remove-btn { border:1px solid var(--line); background:#fff; border-radius:8px; padding:5px 9px; cursor:pointer; font-size:12px; }
+    .remove-btn { color:#a33; }
+    .drawer-foot { border-top:1px solid var(--line); padding:20px 24px; }
+    .subtotal-line { display:flex; justify-content:space-between; font-size:14px; font-weight:850; margin-bottom:14px; }
+    .drawer-note { font-size:10px; color:var(--muted); line-height:1.6; margin-top:10px; }
+    .drawer-primary { display:block; width:100%; border:0; border-radius:999px; padding:14px; background:var(--orange); color:#fff; font-size:12px; font-weight:850; cursor:pointer; }
+    .drawer-primary:disabled { opacity:.5; cursor:not-allowed; }
+    .account-panel { position:fixed; z-index:1002; inset:0; display:grid; place-items:center; padding:18px; background:rgba(16,22,29,.48); backdrop-filter:blur(6px); opacity:0; visibility:hidden; transition:.25s; }
+    .account-panel.show { opacity:1; visibility:visible; }
+    .account-card { width:min(430px,100%); background:#fff; border-radius:24px; padding:28px; box-shadow:0 25px 80px rgba(15,25,35,.2); position:relative; }
+    .account-card h3 { font-size:27px; letter-spacing:-.06em; margin:10px 0 8px; }
+    .account-card p { color:var(--muted); font-size:12px; line-height:1.7; }
+    .account-card .field { margin-top:14px; }
+    .account-card .field input { width:100%; border:1px solid var(--line); background:#f8fafc; padding:13px; border-radius:11px; }
+    .account-status { display:none; margin-top:14px; border-radius:12px; background:#fff4e9; color:#8a4b1c; padding:12px; font-size:11px; line-height:1.6; }
+    .account-status.show { display:block; }
+    .account-close { position:absolute; top:17px; right:17px; border:0; background:#f2f4f6; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; }
+    /* Account dashboard */
+    .account-panel { place-items:stretch; padding:0; overflow:auto; }
+    .account-dashboard { width:min(1180px,100%); min-height:min(820px,100vh); margin:auto; display:grid; grid-template-columns:255px 1fr; background:#f7f9fb; border-radius:0; overflow:hidden; box-shadow:0 25px 90px rgba(0,0,0,.2); }
+    .account-sidebar { background:#17191c; color:#fff; padding:28px 18px; display:flex; flex-direction:column; }
+    .account-side-brand { padding:3px 12px 28px; border-bottom:1px solid rgba(255,255,255,.12); }
+    .account-side-brand .logo { color:#fff; display:block; }
+    .account-side-brand small { display:block; color:#929aa4; font-size:9px; letter-spacing:.18em; margin-top:5px; }
+    .account-side-user { display:flex; align-items:center; gap:11px; padding:23px 8px; border-bottom:1px solid rgba(255,255,255,.12); min-width:0; }
+    .account-side-user strong,.account-side-user small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:145px; }
+    .account-side-user strong { font-size:12px; }.account-side-user small { color:#aab1b9; font-size:10px; margin-top:3px; }
+    .account-avatar { width:42px; height:42px; flex:none; display:grid; place-items:center; border-radius:50%; background:linear-gradient(135deg,#f07832,#527fae); color:#fff; font-size:17px; font-weight:900; overflow:hidden; background-size:cover; background-position:center; }
+    .account-avatar.large { width:76px; height:76px; font-size:25px; }
+    .account-menu { display:grid; gap:6px; padding-top:23px; }
+    .account-menu-item { display:flex; align-items:center; gap:13px; width:100%; border:0; border-radius:12px; padding:13px 12px; background:transparent; color:#c5cbd2; text-align:left; font-size:13px; transition:.2s; }
+    .account-menu-item span { font-weight:650; }.account-menu-item:hover,.account-menu-item.active { color:#fff; background:rgba(240,120,50,.18); }.account-menu-item.active { box-shadow:inset 3px 0 var(--orange); }
+    .account-signout { margin-top:auto; padding:14px 12px 4px; border:0; background:none; color:#c5cbd2; text-align:left; font-size:12px; }
+    .account-main { min-width:0; padding:34px clamp(20px,4vw,54px) 22px; overflow:auto; max-height:100vh; }
+    .account-topbar { display:flex; justify-content:space-between; align-items:center; gap:20px; padding-bottom:25px; border-bottom:1px solid var(--line); }
+    .account-topbar h2 { font-size:30px; letter-spacing:-.06em; margin-top:7px; }
+    .account-topbar .account-close { position:static; flex:none; }
+    .account-view { display:none; padding:27px 0 15px; }.account-view.active { display:block; animation:menuIn .2s ease both; }
+    .account-welcome { min-height:185px; padding:27px 30px; border-radius:22px; display:flex; align-items:center; justify-content:space-between; gap:20px; overflow:hidden; background:linear-gradient(115deg,#fff1e7,#edf4fb); }
+    .account-kicker { color:var(--orange-dark); font-size:9px; font-weight:900; letter-spacing:.17em; }
+    .account-welcome h3 { font-size:clamp(25px,4vw,38px); letter-spacing:-.06em; margin:8px 0; }.account-welcome p { max-width:430px; color:var(--muted); font-size:12px; line-height:1.7; }
+    .account-welcome-mark { color:rgba(82,127,174,.18); font-size:clamp(75px,12vw,130px); font-weight:950; letter-spacing:-.12em; transform:rotate(-12deg); }
+    .account-stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:13px; margin:17px 0; }
+    .account-stat { border:1px solid var(--line); border-radius:17px; padding:18px; text-align:left; background:#fff; }.account-stat span,.account-summary-grid small { display:block; color:var(--muted); font-size:9px; font-weight:850; letter-spacing:.12em; }.account-stat strong { display:block; font-size:26px; margin:7px 0 2px; }.account-stat small { color:var(--orange-dark); font-size:10px; }
+    .account-content-card { background:#fff; border:1px solid var(--line); border-radius:17px; padding:21px; margin-top:14px; }.account-content-card h4 { font-size:14px; }.account-content-card p { color:var(--muted); font-size:11px; line-height:1.7; margin-top:5px; }
+    .account-inline-link { float:right; border:0; background:none; color:var(--orange-dark); font-size:11px; font-weight:850; }.account-summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:23px; }.account-summary-grid strong { display:block; font-size:12px; margin-top:7px; overflow-wrap:anywhere; }
+    .account-section-heading { margin-bottom:22px; }.account-section-heading h3 { font-size:27px; letter-spacing:-.05em; }.account-section-heading p { color:var(--muted); font-size:12px; margin-top:6px; }
+    .account-form { max-width:760px; background:#fff; border:1px solid var(--line); border-radius:18px; padding:23px; }.account-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:22px 0; }.account-form .field.full { grid-column:1/-1; }.account-form .field input,.account-form .field textarea { background:#f8fafc; }.account-photo-row { display:flex; align-items:center; gap:17px; padding-bottom:20px; border-bottom:1px solid var(--line); }.account-photo-row strong { font-size:13px; }.account-photo-row p { color:var(--muted); font-size:10px; margin:4px 0 9px; }.account-upload { display:inline-block; color:var(--orange-dark); font-size:11px; font-weight:850; cursor:pointer; }
+    .account-feedback { display:inline-block; margin-left:12px; color:#287348; font-size:11px; }.account-empty-orders { padding:48px 20px; border:1px dashed rgba(20,30,40,.18); border-radius:18px; background:#fff; text-align:center; }.account-empty-icon { width:54px; height:54px; margin:0 auto 13px; display:grid; place-items:center; border-radius:17px; background:var(--blue-pale); color:var(--blue); font-size:24px; }.account-empty-orders h4 { font-size:17px; }.account-empty-orders p { color:var(--muted); font-size:11px; margin:7px 0 18px; }.account-demo-note { color:var(--muted); font-size:10px; line-height:1.6; margin-top:14px; }
+    .setting-row { display:flex; align-items:center; justify-content:space-between; gap:15px; }.account-setting-pill { flex:none; border-radius:99px; padding:6px 9px; background:#eaf3fb; color:#527fae; font-size:8px; font-weight:900; letter-spacing:.08em; }.account-setting-pill.pending { background:#fff2e9; color:#b65b24; }.account-danger { border:1px solid #efcaca; background:#fff; color:#a33; border-radius:99px; padding:9px 13px; font-size:10px; font-weight:800; }.account-footer-note { color:#a0a7af; font-size:9px; padding-top:20px; border-top:1px solid var(--line); margin-top:20px; }
+    @media(max-width:760px) { .account-dashboard { grid-template-columns:1fr; min-height:100vh; }.account-sidebar { padding:14px 15px; }.account-side-brand { display:none; }.account-side-user { padding:3px 3px 12px; border:0; }.account-menu { display:flex; overflow-x:auto; padding:10px 0 2px; gap:5px; }.account-menu-item { width:auto; white-space:nowrap; padding:10px 12px; font-size:11px; }.account-signout { display:none; }.account-main { max-height:none; padding:20px 17px; }.account-topbar h2 { font-size:25px; }.account-welcome { min-height:150px; padding:20px; }.account-stat-grid { gap:8px; }.account-stat { padding:13px; }.account-stat strong { font-size:21px; }.account-summary-grid { grid-template-columns:1fr; gap:13px; }.account-form { padding:17px; } }
+    @media(max-width:480px) { .account-form-grid { grid-template-columns:1fr; }.account-form .field.full { grid-column:1; }.account-welcome-mark { display:none; }.account-stat-grid { grid-template-columns:1fr; }.account-stat { display:flex; align-items:center; gap:12px; }.account-stat span { min-width:65px; }.account-stat strong { margin:0; }.account-stat small { margin-left:auto; text-align:right; }.setting-row { align-items:flex-start; flex-wrap:wrap; } }
+
+    @media(max-width:850px) { .nav-tools { margin-left:0; } .nav-icon-btn { padding:9px 10px; } .nav-icon-btn .tool-label { display:none; } }
+    @media(max-width:600px) { .nav-tools { gap:5px; } .nav-icon-btn { padding:8px; } .nav-icon-btn .nav-count { min-width:17px; height:17px; } .product-actions { flex-wrap:wrap; } }
+
+    /* ---- Refinements ---- */
+    .nav { gap:16px; } .nav-links { margin:0 auto; } .nav-tools { margin-left:0; }
+    .nav-icon-btn svg { width:16px; height:16px; flex:none; }
+    .nav-count.is-empty { display:none; }
+    .announcement { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ticker-track { gap:0; } .ticker-track span { padding-right:38px; }
+    .qty-btn { min-width:30px; min-height:30px; }
+    .store-drawer { visibility:hidden; transition:transform .3s ease, visibility 0s .3s; }
+    .store-drawer.show { visibility:visible; transition-delay:0s; }
+    body.no-scroll { overflow:hidden; }
+    :focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+    .contact-form, .modal, .floating-tag, .prototype-label, .store-overlay, .modal-backdrop, .account-panel { -webkit-backdrop-filter:blur(12px); }
+    .nav-shell.scrolled + .mobile-menu { top:95px; }
+    @media (max-width:1060px) { .nav-cta { display:none; } .nav-links { gap:24px; } }
+    @media (max-width:850px) { .nav-tools { margin-left:auto; } }
+    @media (max-width:650px) { input, textarea { font-size:16px !important; } .nav-shell.scrolled + .mobile-menu { top:86px; } }
+    @media (prefers-reduced-motion: reduce) { .ticker-track, .shoe-visual { animation:none !important; } }
+
+    /* ---- Account: auth + polish ---- */
+    [hidden] { display:none !important; }
+    .account-auth { margin:auto; width:min(430px,calc(100% - 36px)); background:#fff; border-radius:24px; padding:28px; box-shadow:0 25px 80px rgba(15,25,35,.2); position:relative; }
+    .account-auth h3 { font-size:27px; letter-spacing:-.06em; margin:10px 0 8px; }
+    .account-auth p { color:var(--muted); font-size:12px; line-height:1.7; }
+    .account-auth .field { margin-top:14px; } .account-auth .field input { background:#f8fafc; }
+    .auth-tabs { display:flex; gap:6px; margin:14px 0 4px; padding:4px; border-radius:999px; background:#f2f4f6; }
+    .auth-tab { flex:1; border:0; border-radius:999px; padding:9px 12px; background:transparent; font-size:11px; font-weight:800; color:var(--muted); }
+    .auth-tab.active { background:#fff; color:var(--ink); box-shadow:0 2px 8px rgba(20,30,40,.08); }
+    .auth-alt { display:block; margin:14px auto 0; border:0; background:none; color:var(--blue); font-size:11px; font-weight:750; text-decoration:underline; }
+    .account-status.error { background:#fdecec; color:#9b2c2c; } .account-status.ok { background:#eaf7ef; color:#245b3b; }
+    .account-feedback.error { color:#a33; }
+    .account-form input[readonly] { color:var(--muted); cursor:not-allowed; }
+    .account-menu-item svg { width:17px; height:17px; flex:none; }
+  </style>
+</head>
+<body>
+  <div class="announcement">A fresh step forward · LIMONEEZ sneaker concepts</div>
+  <header class="nav-shell" id="top">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="logo" href="#home" aria-label="LIMONEEZ home">LIMONEEZ<span>®</span></a>
+      <div class="nav-links">
+        <a href="#home" class="active">Home</a><a href="#collection">Collection</a><a href="#story">Our story</a><a href="#contact">Contact</a>
+      </div>
+      <div class="nav-tools" aria-label="Store tools">
+        <button class="nav-icon-btn" id="accountOpen" type="button" aria-label="Customer account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg> <span class="tool-label">Account</span></button>
+        <button class="nav-icon-btn" id="wishlistOpen" type="button" aria-label="Open wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-8-5-9.5-10A5 5 0 0 1 12 6a5 5 0 0 1 9.5 5C20 16 12 21 12 21z"/></svg> <span class="tool-label">Wishlist</span> <span class="nav-count" id="wishlistCount">0</span></button>
+        <button class="nav-icon-btn" id="cartOpen" type="button" aria-label="Open shopping cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg> <span class="tool-label">Cart</span> <span class="nav-count" id="cartCount">0</span></button>
+      </div>
+      <a class="nav-cta" href="#collection">Explore sneakers <span>↗</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span></button>
+    </nav>
+  </header>
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <a href="#home">Home <span>01</span></a>
+    <a href="#collection">Collection <span>02</span></a>
+    <a href="#story">Our story <span>03</span></a>
+    <a href="#contact">Contact <span>04</span></a>
+    <a class="btn btn-primary" href="#collection">Explore the collection ↗</a>
+  </div>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="wrap hero-grid">
+        <div class="hero-copy-block reveal">
+          <div class="eyebrow">The next step in sneaker culture</div>
+          <h1>MOVE<br><em>DIFFERENT.</em></h1>
+          <p class="hero-copy">Fresh perspective. Everyday energy. LIMONEEZ is building a new take on the everyday sneaker — made to bring a little more character to every step.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#collection">Discover the prototypes ↗</a>
+            <a class="btn btn-secondary" href="#story">Get to know us</a>
+          </div>
+          <div class="hero-note"><b>01 / 03</b> &nbsp; A new point of view on everyday sneakers</div>
+        </div>
+        <div class="hero-art reveal">
+          <div class="orbit"></div>
+          <div class="floating-tag tag-one">Prototype series<strong>LZ / 001</strong></div>
+          <div class="floating-tag tag-two">Designed for<strong>Everyday motion</strong></div>
+          <svg class="shoe-visual" viewBox="0 0 720 420" role="img" aria-label="Stylized white sneaker with orange and blue details">
+            <defs>
+              <linearGradient id="upper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".55" stop-color="#edf1f4"/><stop offset="1" stop-color="#cbd4dd"/></linearGradient>
+              <linearGradient id="sole" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#dce2e8"/></linearGradient>
+              <linearGradient id="bluePart"><stop stop-color="#7fa8d0"/><stop offset="1" stop-color="#426f9f"/></linearGradient>
+            </defs>
+            <path d="M92 274 C145 270 190 248 230 205 L300 119 C322 91 352 91 380 111 L482 190 C528 224 578 236 632 244 C662 249 683 271 682 297 L676 324 C673 344 657 356 632 359 L139 359 C101 359 72 340 70 312 C68 293 76 280 92 274Z" fill="url(#sole)" stroke="#c6cdd4" stroke-width="5"/>
+            <path d="M104 271 C158 262 203 236 245 187 L305 121 C327 96 351 98 378 116 L478 192 C522 224 576 239 630 248 C646 251 657 262 660 278 L655 294 C585 300 536 292 482 278 C416 261 356 251 292 264 C226 278 161 300 96 296Z" fill="url(#upper)" stroke="#cbd2d9" stroke-width="4"/>
+            <path d="M303 128 C329 112 347 115 367 130 L430 180 L374 236 L252 214Z" fill="#f5f7f9" stroke="#d0d7de" stroke-width="3"/>
+            <path d="M434 182 L479 214 C516 240 566 250 615 258 L600 285 C546 280 501 265 456 241 L397 211Z" fill="url(#bluePart)" opacity=".95"/>
+            <path d="M210 225 L278 147 L318 171 L270 245Z" fill="#f07832"/>
+            <path d="M283 247 L335 168 M306 255 L358 181 M329 258 L381 194" stroke="#8795a3" stroke-width="8" stroke-linecap="round"/>
+            <path d="M274 146 L348 128" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+            <path d="M110 304 C250 310 360 284 466 300 C545 312 610 318 672 302" fill="none" stroke="#aeb9c4" stroke-width="5"/>
+            <path d="M90 326 C220 348 400 334 560 341" fill="none" stroke="#fff" stroke-width="7" opacity=".9"/>
+            <circle cx="181" cy="286" r="8" fill="#527fae"/><circle cx="202" cy="279" r="6" fill="#527fae"/>
+          </svg>
+        </div>
+      </div>
+      <div class="scroll-cue">Scroll to explore ↓</div>
+    </section>
+
+    <div class="ticker" aria-hidden="true"><div class="ticker-track">
+      <span>MOVE DIFFERENT ✳</span><span>FRESH BY DESIGN ✳</span><span>EVERYDAY ENERGY ✳</span><span>LIMONEEZ SNEAKER LAB ✳</span>
+      <span>MOVE DIFFERENT ✳</span><span>FRESH BY DESIGN ✳</span><span>EVERYDAY ENERGY ✳</span><span>LIMONEEZ SNEAKER LAB ✳</span>
+    </div></div>
+
+    <section class="collection" id="collection">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div><div class="eyebrow">The first drop</div><h2>Meet the<br>prototypes.</h2></div>
+          <p>Three early concepts. One shared idea: sneakers should feel as individual as the people who wear them. Explore the direction we're taking.</p>
+        </div>
+        <div class="product-grid">
+          <article class="product-card reveal">
+            <div class="product-image blue"><span class="prototype-label">CONCEPT / 001</span>
+              <svg viewBox="0 0 420 220" role="img" aria-label="White and blue sneaker concept"><path d="M35 139 Q95 134 135 91 L180 45 Q197 28 218 45 L283 105 Q321 133 382 140 Q400 144 399 164 L394 179 L60 182 Q28 177 35 139Z" fill="#fff" stroke="#c8d4df" stroke-width="4"/><path d="M180 49 Q200 34 218 49 L274 102 L234 143 L135 115Z" fill="#eef2f6"/><path d="M265 112 Q313 139 383 147 L373 166 Q308 161 252 137Z" fill="#527fae"/><path d="M129 111 L178 57 L204 74 L166 132Z" fill="#f07832"/><path d="M185 121 L220 76 M203 132 L238 88 M220 137 L254 101" stroke="#a8b2bc" stroke-width="6" stroke-linecap="round"/><path d="M43 161 Q207 174 393 160" fill="none" stroke="#b9c5d0" stroke-width="5"/></svg>
+            </div>
+            <div class="product-info"><div class="product-top"><h3>The Everyday</h3><span class="product-code">LZ-01</span></div><p>A clean, versatile silhouette with a fresh contrast of colour.</p><button class="text-link" data-product="everyday">View concept ↗</button>
+      <div class="sample-price">Sample price <span data-price="everyday"></span></div>
+      <div class="product-actions"><button class="add-cart-btn" type="button" data-add-cart="everyday">Add to cart</button><button class="wish-btn" type="button" data-wishlist="everyday" aria-pressed="false" aria-label="Add to wishlist">♡</button></div></div>
+          </article>
+          <article class="product-card reveal">
+            <div class="product-image orange"><span class="prototype-label">CONCEPT / 002</span>
+              <svg viewBox="0 0 420 220" role="img" aria-label="White and orange sneaker concept"><path d="M35 139 Q95 134 135 91 L180 45 Q197 28 218 45 L283 105 Q321 133 382 140 Q400 144 399 164 L394 179 L60 182 Q28 177 35 139Z" fill="#fff" stroke="#d9cfc8" stroke-width="4"/><path d="M180 49 Q200 34 218 49 L274 102 L234 143 L135 115Z" fill="#f5f0ec"/><path d="M265 112 Q313 139 383 147 L373 166 Q308 161 252 137Z" fill="#f07832"/><path d="M129 111 L178 57 L204 74 L166 132Z" fill="#527fae"/><path d="M185 121 L220 76 M203 132 L238 88 M220 137 L254 101" stroke="#b8aaa0" stroke-width="6" stroke-linecap="round"/><path d="M43 161 Q207 174 393 160" fill="none" stroke="#c9bdb5" stroke-width="5"/></svg>
+            </div>
+            <div class="product-info"><div class="product-top"><h3>The Shift</h3><span class="product-code">LZ-02</span></div><p>A bolder expression built around playful orange and blue details.</p><button class="text-link" data-product="shift">View concept ↗</button>
+      <div class="sample-price">Sample price <span data-price="shift"></span></div>
+      <div class="product-actions"><button class="add-cart-btn" type="button" data-add-cart="shift">Add to cart</button><button class="wish-btn" type="button" data-wishlist="shift" aria-pressed="false" aria-label="Add to wishlist">♡</button></div></div>
+          </article>
+          <article class="product-card reveal">
+            <div class="product-image grey"><span class="prototype-label">CONCEPT / 003</span>
+              <svg viewBox="0 0 420 220" role="img" aria-label="White and grey sneaker concept"><path d="M35 139 Q95 134 135 91 L180 45 Q197 28 218 45 L283 105 Q321 133 382 140 Q400 144 399 164 L394 179 L60 182 Q28 177 35 139Z" fill="#fff" stroke="#cbd0d5" stroke-width="4"/><path d="M180 49 Q200 34 218 49 L274 102 L234 143 L135 115Z" fill="#edf0f2"/><path d="M265 112 Q313 139 383 147 L373 166 Q308 161 252 137Z" fill="#7c8d9e"/><path d="M129 111 L178 57 L204 74 L166 132Z" fill="#f07832"/><path d="M185 121 L220 76 M203 132 L238 88 M220 137 L254 101" stroke="#aeb6be" stroke-width="6" stroke-linecap="round"/><path d="M43 161 Q207 174 393 160" fill="none" stroke="#b9c0c7" stroke-width="5"/></svg>
+            </div>
+            <div class="product-info"><div class="product-top"><h3>The Motion</h3><span class="product-code">LZ-03</span></div><p>A streamlined concept with understated tones and a sporty edge.</p><button class="text-link" data-product="motion">View concept ↗</button>
+      <div class="sample-price">Sample price <span data-price="motion"></span></div>
+      <div class="product-actions"><button class="add-cart-btn" type="button" data-add-cart="motion">Add to cart</button><button class="wish-btn" type="button" data-wishlist="motion" aria-pressed="false" aria-label="Add to wishlist">♡</button></div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="story">
+      <div class="wrap story">
+        <div class="story-visual reveal"><div class="big-mark">LZ.</div><div class="story-stamp">FRESH<br>BY<br>DESIGN ✳</div></div>
+        <div class="story-copy reveal">
+          <div class="eyebrow">A little about us</div>
+          <h2>Designed to<br>move with you.</h2>
+          <p>LIMONEEZ is a sneaker brand in the making, driven by a simple belief: everyday footwear can have its own point of view. We're exploring clean shapes, confident colour and details that make a pair feel unmistakably yours.</p>
+          <p>These first designs are prototypes — the beginning of a bigger idea. Follow the journey as we shape what's next.</p>
+          <div class="values">
+            <div class="value"><b>Fresh thinking</b><span>New ideas, open minds.</span></div>
+            <div class="value"><b>Everyday style</b><span>Made to fit your rhythm.</span></div>
+            <div class="value"><b>Our own path</b><span>Built with character.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="manifesto">
+      <div class="wrap"><div class="manifesto-box reveal">
+        <div class="eyebrow" style="color:#fff">Your next step starts here</div>
+        <h2>Not just another pair. A different point of view.</h2>
+        <p>Get a first look at the LIMONEEZ concepts and be part of the journey from prototype to something real.</p>
+        <a class="btn" href="#contact">Stay in the loop ↗</a>
+      </div></div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="wrap contact-grid">
+        <div class="contact-copy reveal"><div class="eyebrow">Say hello</div><h2>Let's talk<br> sneakers.</h2><p>Have a question, an idea or feedback on our prototypes? Send us a note. We'd love to hear from you.</p></div>
+        <form class="contact-form reveal" id="contactForm">
+          <div class="field"><label for="name">Your name</label><input id="name" name="name" placeholder="Name" required /></div>
+          <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" placeholder="you@example.com" required /></div>
+          <div class="field full"><label for="message">Your message</label><textarea id="message" name="message" placeholder="Tell us what's on your mind..." required></textarea></div>
+          <div class="form-success" id="formSuccess" role="status">Thanks for reaching out! This demo form is ready to connect to your email service.</div>
+          <div class="field full"><button class="btn btn-primary" type="submit">Send message ↗</button></div>
+          <div class="form-note">Demo form: messages are not sent to a mailbox until you connect a form service.</div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-row">
+        <div class="footer-brand"><a class="logo" href="#home">LIMONEEZ<span>®</span></a><p>Fresh perspective. Everyday energy.</p></div>
+        <div class="footer-links"><a href="#collection">Collection</a><a href="#story">Our story</a><a href="#contact">Contact</a><a href="#home">Back to top ↑</a></div>
+      </div>
+      <div class="copyright">© <span id="year"></span> LIMONEEZ. ALL RIGHTS RESERVED. · SNEAKER CONCEPTS</div>
+    </div>
+  </footer>
+
+
+  <div class="store-overlay" id="storeOverlay" aria-hidden="true"></div>
+  <aside class="store-drawer" id="cartDrawer" aria-label="Shopping cart" aria-hidden="true">
+    <div class="drawer-head"><h3>Your cart <span id="cartHeadingCount">(0)</span></h3><button class="drawer-close" type="button" data-close-store aria-label="Close cart">×</button></div>
+    <div class="drawer-body" id="cartItems"><div class="drawer-empty">Your cart is waiting for its first pair.</div></div>
+    <div class="drawer-foot"><div class="subtotal-line"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+      <button class="drawer-primary" type="button" id="checkoutButton" disabled>Checkout coming soon</button>
+      <p class="drawer-note">These are sample concept prices. Checkout and payments are not connected yet.</p>
+    </div>
+  </aside>
+  <aside class="store-drawer" id="wishlistDrawer" aria-label="Wishlist" aria-hidden="true">
+    <div class="drawer-head"><h3>Your wishlist <span id="wishlistHeadingCount">(0)</span></h3><button class="drawer-close" type="button" data-close-store aria-label="Close wishlist">×</button></div>
+    <div class="drawer-body" id="wishlistItems"><div class="drawer-empty">Save the pairs you love and find them here.</div></div>
+    <div class="drawer-foot"><button class="drawer-primary" type="button" id="wishlistContinue">Continue exploring</button><p class="drawer-note">Wishlist items are saved in this browser for this prototype.</p></div>
+  </aside>
+  <div class="account-panel" id="accountPanel" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
+    <div class="account-auth" id="accountAuth" hidden>
+      <button class="account-close" id="authClose" type="button" aria-label="Close">×</button>
+      <div class="eyebrow">LIMONEEZ MEMBERS</div>
+      <div class="auth-tabs" id="authTabs"><button type="button" class="auth-tab active" data-mode="signin">Sign in</button><button type="button" class="auth-tab" data-mode="signup">Create account</button></div>
+      <h3 id="authTitle">Welcome back.</h3><p id="authIntro">Sign in to manage your LIMONEEZ profile.</p>
+      <form id="authForm">
+        <div class="field" id="authNameField" hidden><label for="authName">Full name</label><input id="authName" autocomplete="name" placeholder="Your name" maxlength="70"></div>
+        <div class="field" id="authEmailField"><label for="authEmail">Email address</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required></div>
+        <div class="field" id="authPasswordField"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Your password" required></div>
+        <button class="drawer-primary" id="authSubmit" style="margin-top:18px" type="submit">Sign in</button>
+      </form>
+      <button class="auth-alt" id="authAlt" type="button">Forgot password?</button>
+      <div class="account-status" id="authStatus" role="status" aria-live="polite"></div>
+    </div>
+    <div class="account-dashboard" id="accountDashboard">
+      <aside class="account-sidebar">
+        <div class="account-side-brand"><span class="logo">LIMONEEZ<span>®</span></span><small>MEMBER SPACE</small></div>
+        <div class="account-side-user">
+          <div class="account-avatar" id="accountAvatarPreview">L</div>
+          <div><strong id="sideProfileName">Your profile</strong><small id="sideProfileEmail">Guest account</small></div>
+        </div>
+        <nav class="account-menu" aria-label="Account menu">
+          <button type="button" class="account-menu-item active" data-account-tab="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> <span>Overview</span></button>
+          <button type="button" class="account-menu-item" data-account-tab="details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg> <span>Personal details</span></button>
+          <button type="button" class="account-menu-item" data-account-tab="orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg> <span>My orders</span></button>
+          <button type="button" class="account-menu-item" data-account-tab="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> <span>Contact & address</span></button>
+          <button type="button" class="account-menu-item" data-account-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg> <span>Settings</span></button>
+        </nav>
+        <button type="button" class="account-signout" id="accountSignOut">← Close account</button>
+      </aside>
+      <div class="account-main">
+        <header class="account-topbar">
+          <div><div class="eyebrow">LIMONEEZ MEMBERS</div><h2 id="accountTitle">My account</h2></div>
+          <button class="account-close" id="accountClose" type="button" aria-label="Close account page">×</button>
+        </header>
+        <section class="account-view active" data-account-view="overview">
+          <div class="account-welcome">
+            <div><span class="account-kicker">YOUR SPACE, YOUR STYLE</span><h3>Welcome back, <span id="welcomeName">there</span>.</h3><p>Manage your profile, keep an eye on orders and update your contact details.</p></div>
+            <div class="account-welcome-mark">LZ.</div>
+          </div>
+          <div class="account-stat-grid">
+            <button type="button" class="account-stat" data-account-tab="orders"><span>ORDERS</span><strong id="orderCount">0</strong><small>View order history →</small></button>
+            <button type="button" class="account-stat" data-account-tab="details"><span>PROFILE</span><strong>↗</strong><small>Edit your details →</small></button>
+            <button type="button" class="account-stat" data-account-tab="contacts"><span>CONTACT</span><strong>＋</strong><small>Manage contact info →</small></button>
+          </div>
+          <div class="account-content-card"><div><h4>Personal information</h4><p>Keep your details up to date so your account stays organised.</p></div><button type="button" class="account-inline-link" data-account-tab="details">Edit profile ↗</button><div class="account-summary-grid"><div><small>FULL NAME</small><strong id="summaryName">Not added</strong></div><div><small>EMAIL ADDRESS</small><strong id="summaryEmail">Not added</strong></div><div><small>PHONE</small><strong id="summaryPhone">Not added</strong></div></div></div>
+        </section>
+        <section class="account-view" data-account-view="details">
+          <div class="account-section-heading"><h3>Personal details</h3><p>Update the information shown on your LIMONEEZ profile.</p></div>
+          <form id="profileForm" class="account-form">
+            <div class="account-photo-row"><div class="account-avatar large" id="accountAvatarLarge">L</div><div><strong>Profile picture</strong><p>Choose a photo from your device. We resize it for you.</p><label class="account-upload" for="accountPhotoInput">Upload photo</label><input id="accountPhotoInput" type="file" accept="image/*" hidden></div></div>
+            <div class="account-form-grid">
+              <div class="field"><label for="profileName">Full name</label><input id="profileName" name="name" placeholder="Your name" maxlength="70"></div>
+              <div class="field"><label for="profileEmail">Email address</label><input id="profileEmail" name="email" type="email" placeholder="you@example.com" readonly></div>
+              <div class="field"><label for="profilePhone">Phone number</label><input id="profilePhone" name="phone" type="tel" placeholder="Phone number" maxlength="20"></div>
+            </div>
+            <button class="btn btn-primary" type="submit">Save changes</button><div class="account-feedback" id="profileFeedback" role="status"></div>
+          </form>
+        </section>
+        <section class="account-view" data-account-view="orders">
+          <div class="account-section-heading"><h3>My orders</h3><p>Your order history will appear here when real checkout is connected.</p></div>
+          <div class="account-empty-orders"><div class="account-empty-icon">▤</div><h4>No orders yet</h4><p>When you place an order, its status and details will be listed here.</p><button type="button" class="btn btn-primary" id="accountShopNow">Explore collection</button></div>
+          <p class="account-demo-note">Demo status: checkout and payment processing are not active, so this page cannot show real purchases or delivery tracking.</p>
+        </section>
+        <section class="account-view" data-account-view="contacts">
+          <div class="account-section-heading"><h3>Contact & address</h3><p>Save a contact number and delivery address for your profile preview.</p></div>
+          <form id="contactDetailsForm" class="account-form">
+            <div class="account-form-grid">
+              <div class="field"><label for="contactPhone">Phone number</label><input id="contactPhone" type="tel" placeholder="Your phone number" maxlength="20"></div>
+              <div class="field"><label for="contactEmail">Email address</label><input id="contactEmail" type="email" placeholder="you@example.com" readonly></div>
+              <div class="field full"><label for="contactAddress">Address</label><textarea id="contactAddress" placeholder="House / street / area / city / PIN code" rows="4" maxlength="350"></textarea></div>
+            </div>
+            <button class="btn btn-primary" type="submit">Save contact details</button><div class="account-feedback" id="contactFeedback" role="status"></div>
+          </form>
+        </section>
+        <section class="account-view" data-account-view="settings">
+          <div class="account-section-heading"><h3>Account settings</h3><p>Manage your sign-in and saved data.</p></div>
+          <div class="account-content-card setting-row"><div><h4>Profile data</h4><p id="storageNote"></p></div><span class="account-setting-pill" id="storagePill">LOCAL</span></div>
+          <div class="account-content-card setting-row"><div><h4>Password</h4><p>We’ll email you a secure link to set a new password.</p></div><button type="button" class="account-danger" style="color:var(--ink);border-color:var(--line)" id="resetPasswordBtn">Email reset link</button></div>
+          <div class="account-content-card setting-row"><div><h4>Clear profile data</h4><p>Remove your saved name, phone, address and photo.</p></div><button type="button" class="account-danger" id="clearProfile">Clear data</button></div>
+        </section>
+        <div class="account-footer-note">LIMONEEZ® · Member account</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+      <div class="eyebrow">LIMONEEZ prototype series</div>
+      <h3 id="modalTitle">The Everyday</h3>
+      <p id="modalText">A clean, versatile silhouette with a fresh contrast of colour. This is an early concept and details may change as the design develops.</p>
+      <a class="btn btn-primary" href="#contact" id="modalContact">Ask us about this concept ↗</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    function closeMenu() {
+      mobileMenu.classList.remove('open');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.setAttribute('aria-label', 'Open navigation menu');
+      document.body.classList.remove('menu-open');
+    }
+    menuToggle.addEventListener('click', () => {
+      const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+      if (isOpen) closeMenu();
+      else {
+        mobileMenu.classList.add('open');
+        mobileMenu.setAttribute('aria-hidden', 'false');
+        menuToggle.setAttribute('aria-expanded', 'true');
+        menuToggle.setAttribute('aria-label', 'Close navigation menu');
+        document.body.classList.add('menu-open');
+      }
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeMenu(); closeModal(); } });
+    document.addEventListener('click', e => {
+      if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) closeMenu();
+    });
+
+    const navShell = document.querySelector('.nav-shell');
+    window.addEventListener('scroll', () => navShell.classList.toggle('scrolled', window.scrollY > 35), { passive: true });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const modal = document.getElementById('productModal');
+    const productData = {
+      everyday: ['The Everyday', 'LZ-01 — A clean, versatile silhouette with a fresh contrast of colour. This is an early concept and details may change as the design develops.'],
+      shift: ['The Shift', 'LZ-02 — A bolder expression built around playful orange and blue details. This is an early concept and details may change as the design develops.'],
+      motion: ['The Motion', 'LZ-03 — A streamlined concept with understated tones and a sporty edge. This is an early concept and details may change as the design develops.']
+    };
+    function closeModal() { modal.classList.remove('show'); }
+    document.querySelectorAll('[data-product]').forEach(button => {
+      button.addEventListener('click', () => {
+        const data = productData[button.dataset.product];
+        document.getElementById('modalTitle').textContent = data[0];
+        document.getElementById('modalText').textContent = data[1];
+        modal.classList.add('show');
+        document.getElementById('modalClose').focus();
+      });
+    });
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.getElementById('modalContact').addEventListener('click', closeModal);
+
+    document.getElementById('contactForm').addEventListener('submit', e => {
+      e.preventDefault();
+      document.getElementById('formSuccess').style.display = 'block';
+      e.target.reset();
+    });
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const sections = document.querySelectorAll('main section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const activeObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id));
+        }
+      });
+    }, { rootMargin: '-35% 0px -55% 0px' });
+    sections.forEach(section => activeObserver.observe(section));
+
+    // LIMONEEZ cart and wishlist prototype.
+    // Cart and wishlist use this browser's localStorage only. Supabase will replace this
+    // storage layer when the real cross-device customer backend is configured.
+    const STORE_PRODUCTS = {
+      everyday: { id:'everyday', name:'The Everyday', code:'LZ-01', price:2499 },
+      shift: { id:'shift', name:'The Shift', code:'LZ-02', price:2799 },
+      motion: { id:'motion', name:'The Motion', code:'LZ-03', price:2999 }
+    };
+    const safeReadStore = (key, fallback) => {
+      try { const value = JSON.parse(localStorage.getItem(key)); return value ?? fallback; }
+      catch (_) { return fallback; }
+    };
+    const asArray = v => Array.isArray(v) ? v : [];
+    let storeCart = asArray(safeReadStore('limoneez_cart_v1', [])).filter(i => i && STORE_PRODUCTS[i.id] && Number.isInteger(i.qty) && i.qty > 0).map(i => ({ id:i.id, qty:Math.min(i.qty,99) }));
+    let storeWishlist = asArray(safeReadStore('limoneez_wishlist_v1', [])).filter(id => STORE_PRODUCTS[id]);
+    const saveStore = () => {
+      try {
+        localStorage.setItem('limoneez_cart_v1', JSON.stringify(storeCart));
+        localStorage.setItem('limoneez_wishlist_v1', JSON.stringify(storeWishlist));
+      } catch (_) { /* Browser storage may be disabled; the current page still works in memory. */ }
+      scheduleCloudSync();
+    };
+    const money = value => '₹' + Number(value).toLocaleString('en-IN');
+    const cartDrawer = document.getElementById('cartDrawer');
+    const wishlistDrawer = document.getElementById('wishlistDrawer');
+    const storeOverlay = document.getElementById('storeOverlay');
+    const accountPanel = document.getElementById('accountPanel');
+
+    let lastFocus = null;
+    function closeStorePanels() {
+      document.body.classList.remove('no-scroll'); if (lastFocus) { lastFocus.focus(); lastFocus = null; }
+      cartDrawer.classList.remove('show'); wishlistDrawer.classList.remove('show');
+      storeOverlay.classList.remove('show');
+      cartDrawer.setAttribute('aria-hidden','true'); wishlistDrawer.setAttribute('aria-hidden','true');
+      storeOverlay.setAttribute('aria-hidden','true');
+    }
+    function openStorePanel(which) {
+      closeStorePanels();
+      const panel = which === 'cart' ? cartDrawer : wishlistDrawer;
+      lastFocus = document.activeElement; document.body.classList.add('no-scroll');
+      panel.classList.add('show'); panel.setAttribute('aria-hidden','false'); panel.querySelector('.drawer-close').focus();
+      storeOverlay.classList.add('show'); storeOverlay.setAttribute('aria-hidden','false');
+    }
+    function renderCart() {
+      const count = storeCart.reduce((sum,item) => sum + item.qty, 0);
+      document.getElementById('cartCount').textContent = count;
+      document.getElementById('cartCount').classList.toggle('is-empty', count === 0);
+      document.getElementById('cartHeadingCount').textContent = '(' + count + ')';
+      const subtotal = storeCart.reduce((sum,item) => sum + (STORE_PRODUCTS[item.id]?.price || 0) * item.qty, 0);
+      document.getElementById('cartSubtotal').textContent = money(subtotal);
+      document.getElementById('checkoutButton').disabled = storeCart.length === 0;
+      document.getElementById('checkoutButton').textContent = storeCart.length ? 'Checkout coming soon' : 'Your cart is empty';
+      const host = document.getElementById('cartItems');
+      if (!storeCart.length) { host.innerHTML = '<div class="drawer-empty">Your cart is waiting for its first pair.</div>'; return; }
+      host.innerHTML = storeCart.map(item => {
+        const p = STORE_PRODUCTS[item.id]; if (!p) return '';
+        return `<div class="cart-row"><div><h4>${p.name}</h4><p>${p.code} · ${money(p.price)} each</p><div class="cart-row-actions"><button class="qty-btn" data-cart-change="${p.id}" data-delta="-1" aria-label="Decrease quantity">−</button><strong>${item.qty}</strong><button class="qty-btn" data-cart-change="${p.id}" data-delta="1" aria-label="Increase quantity">+</button><button class="remove-btn" data-cart-remove="${p.id}">Remove</button></div></div><strong>${money(p.price * item.qty)}</strong></div>`;
+      }).join('');
+    }
+    function renderWishlist() {
+      document.getElementById('wishlistCount').textContent = storeWishlist.length;
+      document.getElementById('wishlistCount').classList.toggle('is-empty', !storeWishlist.length);
+      document.getElementById('wishlistHeadingCount').textContent = '(' + storeWishlist.length + ')';
+      const host = document.getElementById('wishlistItems');
+      if (!storeWishlist.length) { host.innerHTML = '<div class="drawer-empty">Save the pairs you love and find them here.</div>'; }
+      else {
+        host.innerHTML = storeWishlist.map(id => {
+          const p = STORE_PRODUCTS[id]; if (!p) return '';
+          return `<div class="wish-row"><div><h4>${p.name}</h4><p>${p.code} · Sample price ${money(p.price)}</p><div class="cart-row-actions"><button class="qty-btn" data-wish-add="${id}">Add to cart</button><button class="remove-btn" data-wish-remove="${id}">Remove</button></div></div><span>♡</span></div>`;
+        }).join('');
+      }
+      document.querySelectorAll('[data-wishlist]').forEach(button => {
+        const active = storeWishlist.includes(button.dataset.wishlist);
+        button.classList.toggle('active', active); button.textContent = active ? '♥' : '♡';
+        button.setAttribute('aria-pressed', String(active));
+        button.setAttribute('aria-label', active ? 'Remove from wishlist' : 'Add to wishlist');
+      });
+    }
+    function addToCart(id) {
+      if (!STORE_PRODUCTS[id]) return;
+      const existing = storeCart.find(item => item.id === id);
+      if (existing) existing.qty += 1; else storeCart.push({id,qty:1});
+      saveStore(); renderCart();
+      const button = document.querySelector(`[data-add-cart="${id}"]`);
+      if (button) { button.dataset.label = button.dataset.label || button.textContent; button.textContent = 'Added ✓'; clearTimeout(button._t); button._t = setTimeout(() => button.textContent = button.dataset.label, 1000); }
+    }
+    document.querySelectorAll('[data-add-cart]').forEach(button => button.addEventListener('click', () => addToCart(button.dataset.addCart)));
+    document.querySelectorAll('[data-wishlist]').forEach(button => button.addEventListener('click', () => {
+      const id = button.dataset.wishlist;
+      storeWishlist = storeWishlist.includes(id) ? storeWishlist.filter(item => item !== id) : [...storeWishlist,id];
+      saveStore(); renderWishlist();
+    }));
+    document.getElementById('cartOpen').addEventListener('click', () => openStorePanel('cart'));
+    document.getElementById('wishlistOpen').addEventListener('click', () => openStorePanel('wishlist'));
+    storeOverlay.addEventListener('click', closeStorePanels);
+    document.querySelectorAll('[data-close-store]').forEach(button => button.addEventListener('click', closeStorePanels));
+    document.getElementById('cartItems').addEventListener('click', event => {
+      const change = event.target.closest('[data-cart-change]');
+      const remove = event.target.closest('[data-cart-remove]');
+      if (change) {
+        const item = storeCart.find(row => row.id === change.dataset.cartChange);
+        if (item) { item.qty += Number(change.dataset.delta); if (item.qty <= 0) storeCart = storeCart.filter(row => row.id !== item.id); }
+      }
+      if (remove) storeCart = storeCart.filter(row => row.id !== remove.dataset.cartRemove);
+      saveStore(); renderCart();
+    });
+    document.getElementById('wishlistItems').addEventListener('click', event => {
+      const add = event.target.closest('[data-wish-add]');
+      const remove = event.target.closest('[data-wish-remove]');
+      if (add) addToCart(add.dataset.wishAdd);
+      if (remove) { storeWishlist = storeWishlist.filter(id => id !== remove.dataset.wishRemove); saveStore(); renderWishlist(); }
+    });
+    document.getElementById('wishlistContinue').addEventListener('click', () => { closeStorePanels(); document.getElementById('collection').scrollIntoView({behavior:'smooth'}); });
+    // ================= Supabase accounts =================
+    // Paste your Project URL and anon/publishable key (never the service_role/secret key).
+    const SUPABASE_URL = 'https://titobtrzmyzpxopaqekj.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_hAfUt7oDBjqN2J6c7_ekgg_K1jg2fYY';
+    const sb = (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+    const $ = id => document.getElementById(id);
+    const PROFILE_KEY = 'limoneez_profile_preview_v1';
+    let currentUser = null, accountProfile = {}, recovering = /type=recovery/.test(location.hash), authMode = 'signin', syncTimer = null;
+    const readLocalProfile = () => { try { return JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; } catch (_) { return {}; } };
+    const nowISO = () => new Date().toISOString();
+    const SAFE_IMG = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/;
+    function setAvatar(el, photo, fallback) {
+      const ok = photo && SAFE_IMG.test(photo);
+      el.textContent = ok ? '' : fallback; el.style.backgroundImage = ok ? `url("${photo}")` : '';
+    }
+    function renderAccountProfile() {
+      const p = accountProfile, letter = (p.name || p.email || 'L').charAt(0).toUpperCase();
+      $('sideProfileName').textContent = p.name || 'Your profile';
+      $('sideProfileEmail').textContent = p.email || 'Guest account';
+      $('welcomeName').textContent = p.name ? p.name.split(' ')[0] : 'there';
+      $('summaryName').textContent = p.name || 'Not added'; $('summaryEmail').textContent = p.email || 'Not added'; $('summaryPhone').textContent = p.phone || 'Not added';
+      setAvatar($('accountAvatarPreview'), p.photo, letter); setAvatar($('accountAvatarLarge'), p.photo, letter);
+      $('profileName').value = p.name || ''; $('profileEmail').value = p.email || ''; $('profilePhone').value = p.phone || '';
+      $('contactPhone').value = p.phone || ''; $('contactEmail').value = p.email || ''; $('contactAddress').value = p.address || '';
+      $('orderCount').textContent = '0';
+      $('storagePill').textContent = sb ? 'CLOUD' : 'LOCAL';
+      $('storageNote').textContent = sb ? 'Your details are saved securely to your account.' : 'Preview mode: details are saved in this browser only.';
+      $('accountSignOut').textContent = sb ? 'Sign out' : '← Close account';
+      document.querySelector('#accountOpen .tool-label').textContent = currentUser ? (p.name || p.email || 'Account').split(/[\s@]/)[0] : 'Account';
+    }
+    async function saveProfile() {
+      renderAccountProfile();
+      if (!sb) { try { localStorage.setItem(PROFILE_KEY, JSON.stringify(accountProfile)); } catch (_) {} return true; }
+      if (!currentUser) return false;
+      const { error } = await sb.from('profiles').upsert({ id: currentUser.id, full_name: accountProfile.name || null, phone: accountProfile.phone || null, address: accountProfile.address || null, avatar_url: accountProfile.photo || null, updated_at: nowISO() });
+      return !error;
+    }
+    // Cart + wishlist sync (merged on sign-in, saved on every change)
+    function scheduleCloudSync() {
+      if (!sb || !currentUser) return; clearTimeout(syncTimer);
+      syncTimer = setTimeout(() => sb.from('profiles').upsert({ id: currentUser.id, cart: storeCart, wishlist: storeWishlist, updated_at: nowISO() }), 800);
+    }
+    function mergeRemoteStore(row) {
+      asArray(row?.cart).filter(i => i && STORE_PRODUCTS[i.id] && Number.isInteger(i.qty) && i.qty > 0).forEach(r => {
+        const l = storeCart.find(i => i.id === r.id); if (l) l.qty = Math.min(99, Math.max(l.qty, r.qty)); else storeCart.push({ id: r.id, qty: Math.min(r.qty, 99) });
+      });
+      storeWishlist = [...new Set([...storeWishlist, ...asArray(row?.wishlist).filter(id => STORE_PRODUCTS[id])])];
+      saveStore(); renderCart(); renderWishlist();
+    }
+    async function loadProfile() {
+      const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
+      accountProfile = { name: data?.full_name || currentUser.user_metadata?.full_name || '', email: currentUser.email, phone: data?.phone || '', address: data?.address || '', photo: data?.avatar_url || '' };
+      mergeRemoteStore(data);
+    }
+    // View switching
+    const gated = () => !!sb && (!currentUser || recovering);
+    function syncView() { $('accountAuth').hidden = !gated(); $('accountDashboard').hidden = gated(); }
+    async function applySession(session) {
+      currentUser = session?.user || null;
+      if (currentUser && !recovering) await loadProfile(); else if (!currentUser) accountProfile = {};
+      if (recovering) setAuthMode('reset');
+      renderAccountProfile(); syncView();
+    }
+    function showAccountTab(tab) {
+      document.querySelectorAll('[data-account-view]').forEach(v => v.classList.toggle('active', v.dataset.accountView === tab));
+      document.querySelectorAll('.account-menu-item').forEach(b => b.classList.toggle('active', b.dataset.accountTab === tab));
+      const titles = { overview:'My account', details:'Personal details', orders:'My orders', contacts:'Contact & address', settings:'Account settings' };
+      $('accountTitle').textContent = titles[tab] || 'My account';
+      document.querySelector('.account-main').scrollTop = 0;
+    }
+    let accountTrigger = null;
+    function closeAccount() { accountPanel.classList.remove('show'); document.body.classList.remove('no-scroll'); if (accountTrigger) { accountTrigger.focus(); accountTrigger = null; } }
+    function openAccount() {
+      accountTrigger = document.activeElement; syncView(); renderAccountProfile(); showAccountTab('overview');
+      accountPanel.classList.add('show'); document.body.classList.add('no-scroll');
+      (gated() ? $('authEmail') : $('accountClose')).focus();
+    }
+    // Auth form
+    const AUTH_COPY = {
+      signin: ['Welcome back.', 'Sign in to manage your LIMONEEZ profile.', 'Sign in'],
+      signup: ['Join LIMONEEZ.', 'Create an account to save your details and cart.', 'Create account'],
+      recover: ['Reset your password.', 'Enter your email and we’ll send you a reset link.', 'Send reset link'],
+      reset: ['Choose a new password.', 'Enter a new password for your account.', 'Update password']
+    };
+    function showAuthMsg(text, type) { const b = $('authStatus'); b.textContent = text; b.className = 'account-status' + (text ? ' show ' + (type || '') : ''); }
+    function setAuthMode(mode) {
+      authMode = mode; const [t, i, l] = AUTH_COPY[mode];
+      $('authTitle').textContent = t; $('authIntro').textContent = i; $('authSubmit').textContent = l;
+      $('authNameField').hidden = mode !== 'signup'; $('authEmailField').hidden = mode === 'reset'; $('authPasswordField').hidden = mode === 'recover';
+      $('authEmail').required = mode !== 'reset'; $('authPassword').required = mode !== 'recover';
+      $('authPassword').minLength = mode === 'signin' ? 0 : 8; $('authPassword').autocomplete = mode === 'signin' ? 'current-password' : 'new-password';
+      $('authTabs').hidden = mode === 'recover' || mode === 'reset'; $('authAlt').hidden = !(mode === 'signin' || mode === 'recover');
+      $('authAlt').textContent = mode === 'signin' ? 'Forgot password?' : 'Back to sign in';
+      document.querySelectorAll('.auth-tab').forEach(b => b.classList.toggle('active', b.dataset.mode === mode)); showAuthMsg('');
+    }
+    const friendly = m => /invalid login/i.test(m) ? 'Email or password is incorrect.' : /not confirmed/i.test(m) ? 'Please confirm your email first — check your inbox.' : /rate limit|too many/i.test(m) ? 'Too many attempts. Please wait a few minutes.' : m;
+    document.querySelectorAll('.auth-tab').forEach(b => b.addEventListener('click', () => setAuthMode(b.dataset.mode)));
+    $('authAlt').addEventListener('click', () => setAuthMode(authMode === 'signin' ? 'recover' : 'signin'));
+    $('authForm').addEventListener('submit', async e => {
+      e.preventDefault(); const email = $('authEmail').value.trim(), password = $('authPassword').value, btn = $('authSubmit');
+      const back = location.href.split('#')[0]; btn.disabled = true; showAuthMsg('');
+      try {
+        let r;
+        if (authMode === 'signup') r = await sb.auth.signUp({ email, password, options: { data: { full_name: $('authName').value.trim() }, emailRedirectTo: back } });
+        else if (authMode === 'signin') r = await sb.auth.signInWithPassword({ email, password });
+        else if (authMode === 'recover') r = await sb.auth.resetPasswordForEmail(email, { redirectTo: back });
+        else r = await sb.auth.updateUser({ password });
+        if (r.error) showAuthMsg(friendly(r.error.message), 'error');
+        else if (authMode === 'signup') showAuthMsg(r.data.user?.identities?.length === 0 ? 'An account with this email already exists. Try signing in.' : r.data.session ? '' : 'Almost there! Check your inbox to confirm your email, then sign in.', r.data.user?.identities?.length === 0 ? 'error' : 'ok');
+        else if (authMode === 'recover') showAuthMsg('If an account exists for that email, a reset link is on its way.', 'ok');
+        else if (authMode === 'reset') { recovering = false; history.replaceState(null, '', back); await applySession((await sb.auth.getSession()).data.session); }
+      } catch (_) { showAuthMsg('Network problem. Please try again.', 'error'); }
+      finally { btn.disabled = false; $('authPassword').value = ''; }
+    });
+    // Dashboard actions
+    const fb = (id, ok, msg) => { const el = $(id); el.textContent = ok ? msg : 'Couldn’t save. Please check your details and try again.'; el.classList.toggle('error', !ok); };
+    const validPhone = v => !v || /^[0-9+\s()-]{7,20}$/.test(v);
+    $('profileForm').addEventListener('submit', async e => {
+      e.preventDefault(); const phone = $('profilePhone').value.trim();
+      if (!validPhone(phone)) return fb('profileFeedback', false);
+      accountProfile = { ...accountProfile, name: $('profileName').value.trim(), phone }; fb('profileFeedback', await saveProfile(), 'Profile updated.');
+    });
+    $('contactDetailsForm').addEventListener('submit', async e => {
+      e.preventDefault(); const phone = $('contactPhone').value.trim();
+      if (!validPhone(phone)) return fb('contactFeedback', false);
+      accountProfile = { ...accountProfile, phone, address: $('contactAddress').value.trim() }; fb('contactFeedback', await saveProfile(), 'Contact details saved.');
+    });
+    const resizeImage = (file, size = 256) => new Promise((ok, no) => {
+      const img = new Image(), url = URL.createObjectURL(file);
+      img.onload = () => { const c = document.createElement('canvas'); c.width = c.height = size; const m = Math.min(img.width, img.height);
+        c.getContext('2d').drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, size, size); URL.revokeObjectURL(url); ok(c.toDataURL('image/jpeg', .82)); };
+      img.onerror = no; img.src = url;
+    });
+    $('accountPhotoInput').addEventListener('change', async e => {
+      const f = e.target.files?.[0]; e.target.value = '';
+      if (!f || !f.type.startsWith('image/')) return;
+      if (f.size > 10 * 1024 * 1024) return fb('profileFeedback', false);
+      try { accountProfile.photo = await resizeImage(f); fb('profileFeedback', await saveProfile(), 'Photo updated.'); } catch (_) { fb('profileFeedback', false); }
+    });
+    $('clearProfile').addEventListener('click', async () => {
+      if (!confirm('Clear your saved name, phone, address and photo?')) return;
+      accountProfile = { email: accountProfile.email }; if (!sb) try { localStorage.removeItem(PROFILE_KEY); } catch (_) {}
+      fb('profileFeedback', await saveProfile(), 'Profile data cleared.');
+    });
+    $('resetPasswordBtn').addEventListener('click', async e => {
+      if (!sb || !currentUser) { e.target.textContent = 'Sign in first'; return; }
+      const { error } = await sb.auth.resetPasswordForEmail(currentUser.email, { redirectTo: location.href.split('#')[0] });
+      e.target.textContent = error ? 'Try again later' : 'Link sent ✓';
+    });
+    $('accountSignOut').addEventListener('click', async () => { if (sb) await sb.auth.signOut(); closeAccount(); });
+    $('accountShopNow').addEventListener('click', () => { closeAccount(); $('collection').scrollIntoView({ behavior:'smooth' }); });
+    $('accountOpen').addEventListener('click', openAccount);
+    $('accountClose').addEventListener('click', closeAccount); $('authClose').addEventListener('click', closeAccount);
+    accountPanel.addEventListener('click', e => { if (e.target === accountPanel) closeAccount(); });
+    document.querySelectorAll('[data-account-tab]').forEach(b => b.addEventListener('click', () => showAccountTab(b.dataset.accountTab)));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeStorePanels(); closeAccount(); } });
+    function initAuth() {
+      if (!sb) { accountProfile = readLocalProfile(); renderAccountProfile(); return; }
+      sb.auth.onAuthStateChange((event, session) => {
+        if (event === 'TOKEN_REFRESHED') return;
+        if (event === 'PASSWORD_RECOVERY') { recovering = true; accountPanel.classList.add('show'); document.body.classList.add('no-scroll'); }
+        if (event === 'SIGNED_OUT') {
+          // Keep this browser's guest cart/wishlist, but stop cloud writes for the signed-out user.
+          currentUser = null;
+          renderCart(); renderWishlist();
+        }
+        setTimeout(() => applySession(session), 0);
+      });
+    }
+    document.querySelectorAll('[data-price]').forEach(el => el.textContent = money(STORE_PRODUCTS[el.dataset.price].price));
+    const tickerTrack = document.querySelector('.ticker-track'); tickerTrack.innerHTML += tickerTrack.innerHTML;
+    renderCart(); renderWishlist(); initAuth();
+
+  </script>
+</body>
+</html>
